@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Para Alma 💌</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rose: #c8526b;
+      --blush: #f5c6d0;
+      --cream: #fff8f3;
+      --wine: #7b1e35;
+      --gold: #c9924a;
+      --dark: #1a0a10;
+    }
+
+    body {
+      background-color: var(--dark);
+      font-family: 'Lato', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Starfield background */
+    .stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      animation: twinkle var(--dur, 3s) infinite alternate ease-in-out;
+    }
+    @keyframes twinkle {
+      from { opacity: 0.1; transform: scale(1); }
+      to   { opacity: 0.9; transform: scale(1.4); }
+    }
+
+    /* Floating petals */
+    .petal {
+      position: fixed;
+      font-size: 1.2rem;
+      pointer-events: none;
+      z-index: 0;
+      animation: fall linear infinite;
+      opacity: 0.7;
+    }
+    @keyframes fall {
+      0%   { transform: translateY(-60px) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.8; }
+      90%  { opacity: 0.6; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* Main container */
+    .container {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 2rem 1.5rem;
+      max-width: 700px;
+      width: 95%;
+    }
+
+    .title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(2.4rem, 7vw, 4.2rem);
+      color: var(--blush);
+      letter-spacing: 0.02em;
+      text-shadow: 0 0 40px rgba(200,82,107,0.4);
+      animation: fadeDown 1s ease forwards;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 0.4rem;
+      margin-bottom: 2.5rem;
+      animation: fadeDown 1.2s ease forwards;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Category buttons */
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+      animation: fadeUp 1.4s ease forwards;
+    }
+
+    .cat-btn {
+      background: transparent;
+      border: 1px solid rgba(200,82,107,0.4);
+      color: var(--blush);
+      font-family: 'Lato', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.5rem 1.1rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .cat-btn:hover, .cat-btn.active {
+      background: var(--rose);
+      border-color: var(--rose);
+      color: white;
+      box-shadow: 0 0 20px rgba(200,82,107,0.5);
+    }
+
+    /* Message card */
+    .card {
+      background: rgba(255,248,243,0.04);
+      border: 1px solid rgba(200,82,107,0.2);
+      border-radius: 1.5rem;
+      padding: 2.5rem 2rem;
+      backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
+      min-height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeUp 1.6s ease forwards;
+    }
+    .card::before {
+      content: '"';
+      position: absolute;
+      top: -0.5rem;
+      left: 1.2rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 8rem;
+      color: rgba(200,82,107,0.08);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    #message-text {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.1rem, 3vw, 1.45rem);
+      color: var(--cream);
+      line-height: 1.75;
+      text-align: center;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    #message-text.fade-out {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    /* Buttons */
+    .actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+      animation: fadeUp 1.8s ease forwards;
+    }
+
+    .btn {
+      padding: 0.75rem 2rem;
+      border-radius: 999px;
+      border: none;
+      font-family: 'Lato', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-main {
+      background: linear-gradient(135deg, var(--rose), var(--wine));
+      color: white;
+      box-shadow: 0 4px 20px rgba(200,82,107,0.35);
+    }
+    .btn-main:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(200,82,107,0.55);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(201,146,74,0.5);
+      color: var(--gold);
+    }
+    .btn-outline:hover {
+      background: rgba(201,146,74,0.1);
+      border-color: var(--gold);
+    }
+
+    /* Heart burst on click */
+    .heart-burst {
+      position: fixed;
+      font-size: 1.4rem;
+      pointer-events: none;
+      z-index: 99;
+      animation: burst 1s ease forwards;
+    }
+    @keyframes burst {
+      0%   { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-80px) scale(1.8); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* footer */
+    .footer {
+      margin-top: 2rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: rgba(245,198,208,0.25);
+      text-transform: uppercase;
+      animation: fadeUp 2s ease forwards;
+    }
+  </style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="container">
+  <div class="title">Para Alma</div>
+  <div class="subtitle">Elige cómo quieres sentirte hoy ✦</div>
+
+  <div class="categories">
+    <button class="cat-btn active" onclick="setCategory('todos', this)">Todos</button>
+    <button class="cat-btn" onclick="setCategory('risa', this)">Tu risa</button>
+    <button class="cat-btn" onclick="setCategory('romantico', this)">Romántico</button>
+    <button class="cat-btn" onclick="setCategory('profundo', this)">Profundo</button>
+    <button class="cat-btn" onclick="setCategory('tierno', this)">Tierno</button>
+    <button class="cat-btn" onclick="setCategory('sorpresa', this)">Sorpresa 🎁</button>
+  </div>
+
+  <div class="card">
+    <p id="message-text">Presiona el botón y descubre algo bonito 💌</p>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-main" onclick="showMessage()">✨ Nuevo mensaje</button>
+    <button class="btn btn-outline" onclick="copyMessage()">Copiar 💬</button>
+  </div>
+
+  <div class="footer">Hecho con amor para ti, Alma 🌹</div>
+</div>
+
+<script>
+  const messages = {
+    risa: [
+      "Alma, tu risa debería ser ilegal. Hace que todo lo demás deje de importar.",
+      "Cuando te ríes así, sin filtro, eres la persona más hermosa que he visto en mi vida.",
+      "Alma, me enamoro un poco más de ti cada vez que te escucho reír. Es ridículo lo mucho que me gusta ese sonido.",
+      "Tu risa tiene el poder de convertir cualquier día gris en algo completamente diferente. No sé cómo lo haces.",
+      "Hay cosas en la vida que son irrepetibles, Alma. Tu risa es una de ellas.",
+    ],
+    romantico: [
+      "Me enamoro de ti cada vez que te ríes, Alma. No sé si te das cuenta del efecto que tienes en mí.",
+      "Alma, desde que estás conmigo, todo tiene más sentido. El mundo es mejor con tu presencia en él.",
+      "No sé cómo era mi vida antes de conocerte, y ya no quiero recordarlo.",
+      "Eres la razón por la que entiendo todas esas canciones de amor que antes no tenían sentido.",
+      "Contigo aprendí que el amor no se busca, se reconoce. Y yo te reconocí a ti desde el primer momento.",
+    ],
+    profundo: [
+      "Alma, no sé si alguna vez te lo han dicho como se merece, pero eres de esas personas que hacen que el mundo sea un lugar mejor con solo existir.",
+      "Hay algo en ti que me recuerda que las cosas importantes no siempre hacen ruido. A veces simplemente están ahí, como tú.",
+      "Me alegra tanto que seas mía, y más aún, que yo sea tuyo.",
+      "Eres la persona con quien quiero vivir todas las cosas bonitas que todavía están por pasar.",
+      "No necesito grandes gestos para saber que te quiero. Lo sé en los momentos pequeños, en los que nadie más ve.",
+    ],
+    tierno: [
+      "Alma, me alegra el alma cada vez que te escucho reír. Y eso no es un juego de palabras, es la pura verdad.",
+      "Eres la persona con quien más quiero pasar mi tiempo. En serio, nadie me gana.",
+      "Contigo todo es más divertido. Incluso lo aburrido.",
+      "Me encanta como eres, Alma. No cambies nada.",
+      "Pensé en ti hoy, y se me escapó una sonrisa sin querer. Así es todos los días.",
+    ],
+    sorpresa: [
+      "Hola, Alma. Esto lo hice yo para ti. No sé mucho de muchas cosas, pero sé que te quiero, y eso me parece suficiente. 💌",
+      "Sabía que ibas a hacer clic en 'Sorpresa'. Porque así eres tú, curiosa y especial. Me encanta eso de ti.",
+      "Esta es la sección secreta. Solo llegan aquí las personas que lo merecen. Tú eres una de ellas, Alma.",
+      "Si estás leyendo esto, es porque alguien se tomó el tiempo de crear algo solo para ti. Espero que te haya hecho sonreír.",
+      "No hay mensaje más bonito que este: te quiero, Alma. Simple, real y sin adornos.",
+    ],
+  };
+
+  let currentCategory = 'todos';
+  let lastIndex = -1;
+
+  function getAllMessages() {
+    return Object.values(messages).flat();
+  }
+
+  function setCategory(cat, btn) {
+    currentCategory = cat;
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    lastIndex = -1;
+    showMessage();
+  }
+
+  function getPool() {
+    return currentCategory === 'todos' ? getAllMessages() : (messages[currentCategory] || []);
+  }
+
+  function showMessage() {
+    const pool = getPool();
+    let idx;
+    do { idx = Math.floor(Math.random() * pool.length); } while (idx === lastIndex && pool.length > 1);
+    lastIndex = idx;
+
+    const el = document.getElementById('message-text');
+    el.classList.add('fade-out');
+    setTimeout(() => {
+      el.textContent = pool[idx];
+      el.classList.remove('fade-out');
+    }, 400);
+
+    spawnHearts();
+  }
+
+  function copyMessage() {
+    const text = document.getElementById('message-text').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = event.currentTarget;
+      btn.textContent = '✅ Copiado';
+      setTimeout(() => btn.textContent = 'Copiar 💬', 1800);
+    });
+  }
+
+  function spawnHearts() {
+    const emojis = ['❤️','🌹','💕','✨','💌','🌸'];
+    for (let i = 0; i < 6; i++) {
+      setTimeout(() => {
+        const h = document.createElement('div');
+        h.className = 'heart-burst';
+        h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        h.style.left = (20 + Math.random() * 60) + 'vw';
+        h.style.top  = (30 + Math.random() * 40) + 'vh';
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 1000);
+      }, i * 80);
+    }
+  }
+
+  // Stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      top:${Math.random()*100}%;
+      left:${Math.random()*100}%;
+      --dur:${2 + Math.random()*4}s;
+      animation-delay:${Math.random()*4}s;
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // Petals
+  const petalEmojis = ['🌸','🌹','🌺','💮','🪷'];
+  for (let i = 0; i < 12; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = petalEmojis[Math.floor(Math.random() * petalEmojis.length)];
+    p.style.cssText = `
+      left:${Math.random()*100}vw;
+      animation-duration:${8+Math.random()*10}s;
+      animation-delay:${Math.random()*10}s;
+      font-size:${0.8+Math.random()*1}rem;
+    `;
+    document.body.appendChild(p);
+  }
+</script>
+</body>
+</html>
